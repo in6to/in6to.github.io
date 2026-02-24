@@ -1,0 +1,1213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>in6.to — Zero-Trace Platform for Secure Communication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #151d2e;
+            --bg-card-hover: #1a2540;
+            --accent: #3b82f6;
+            --accent-dim: #1e40af;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --danger: #ef4444;
+            --danger-dim: rgba(239, 68, 68, 0.15);
+            --success: #22c55e;
+            --success-dim: rgba(34, 197, 94, 0.12);
+            --warning: #f59e0b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-dim: #64748b;
+            --border: #1e293b;
+            --border-light: #2d3a4f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.4rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-dim);
+            color: var(--text-primary);
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Source Serif 4', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 3rem;
+        }
+
+        /* ===== STATS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+        }
+
+        .stat-number {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* ===== THREAT MODEL ===== */
+        .threat-section {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .threat-scenarios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .threat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .threat-card:hover {
+            border-color: var(--border-light);
+        }
+
+        .threat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .threat-icon.danger {
+            background: var(--danger-dim);
+        }
+
+        .threat-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .threat-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ===== SECURITY FEATURES ===== */
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .security-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            position: relative;
+            transition: all 0.25s;
+        }
+
+        .security-card:hover {
+            border-color: var(--accent-dim);
+            background: var(--bg-card-hover);
+        }
+
+        .security-card .card-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .security-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .security-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .flow-steps {
+            position: relative;
+            margin-top: 2rem;
+        }
+
+        .flow-step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: flex-start;
+        }
+
+        .flow-step-marker {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--accent);
+        }
+
+        .flow-step-content h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .flow-step-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== MODULES ===== */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .module-card:hover {
+            border-color: var(--accent-dim);
+        }
+
+        .module-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .module-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .module-card p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* ===== SCREENSHOTS ===== */
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .screenshot-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .screenshot-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .screenshot-caption {
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .media-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-card) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .media-placeholder-wide {
+            min-height: 280px;
+        }
+
+        .media-placeholder-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        .media-placeholder-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .media-placeholder-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== TRACK RECORD ===== */
+        .track-section {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .track-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .track-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .track-marker {
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 0.5rem;
+        }
+
+        .track-item h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .track-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .track-item .track-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .track-item .track-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== FIELD TESTED ===== */
+        .field-tested-box {
+            background: var(--success-dim);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .field-tested-box h4 {
+            color: var(--success);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .field-tested-box p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== ROADMAP ===== */
+        .roadmap-items {
+            margin-top: 2rem;
+        }
+
+        .roadmap-item {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .roadmap-status {
+            flex-shrink: 0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .roadmap-status.next {
+            background: var(--accent-glow);
+            color: var(--accent);
+            border: 1px solid var(--accent-dim);
+        }
+
+        .roadmap-status.planned {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .roadmap-status.vision {
+            background: rgba(148, 163, 184, 0.08);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .roadmap-item h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .roadmap-item p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-section {
+            text-align: center;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-section .section-title {
+            margin-bottom: 1rem;
+        }
+
+        .contact-section .section-text {
+            margin: 0 auto 2rem;
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .contact-item:hover {
+            border-color: var(--accent-dim);
+            background: var(--bg-card-hover);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: var(--accent-dim);
+            margin-bottom: 2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 1.25rem;
+            }
+
+            .hero {
+                padding: 6rem 1.25rem 3rem;
+            }
+
+            .flow-step {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .threat-scenarios,
+            .security-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .track-item {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .roadmap-item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">in6.to</a>
+    <ul class="nav-links">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#screenshots">Demo</a></li>
+        <li><a href="#track-record">Track Record</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">Active MVP · Used by activists</div>
+        <h1>A <span class="highlight">zero-trace</span> platform for secure communication in authoritarian states</h1>
+        <p class="hero-subtitle">
+            in6.to is a browser-based platform that leaves nothing behind on the device. No app to install. No data to find. Close the tab — and everything disappears. Built for people in Belarus, Russia, and other repressive environments where accessing independent information or communicating freely can lead to prosecution. The goal is simple: let people exercise their basic rights without risking their safety.
+        </p>
+        <div class="hero-cta">
+            <a href="#how-it-works" class="btn btn-primary">How It Works ↓</a>
+            <a href="https://in6.to/" target="_blank" class="btn btn-primary">Open App</a>
+            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+        </div>
+    </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="threat-section" id="problem">
+    <div class="container">
+        <div class="section-label">The Problem</div>
+        <h2 class="section-title">Digital repression is physical</h2>
+        <p class="section-text">
+            In countries like Belarus, Russia, Turkmenistan, Iran, and others, authorities don't just monitor online activity — they confiscate devices on the street, during home raids, and at checkpoints. People are being sentenced to years in prison for old comments in Telegram chats. Even a subscription to an opposition channel can trigger criminal prosecution. People need a way to communicate, read independent news, and organize — without leaving any trace on their device.
+        </p>
+
+        <div class="threat-scenarios">
+            <div class="threat-card">
+                <div class="threat-icon danger">🚪</div>
+                <h4>Home raids</h4>
+                <p>Security forces break into homes and seize all electronics for forensic analysis. Hard drives, phones, and tablets are examined using professional extraction tools.</p>
+            </div>
+            <div class="threat-card">
+                <div class="threat-icon danger">📱</div>
+                <h4>Street inspections</h4>
+                <p>Police stop people on the street or at work and demand to unlock their devices on the spot. Any "suspicious" app, subscription, or chat history becomes evidence.</p>
+            </div>
+            <div class="threat-card">
+                <div class="threat-icon danger">🔬</div>
+                <h4>Forensic extraction</h4>
+                <p>Authorities use specialized hardware and software (Cellebrite, Oxygen Forensic, etc.) to bypass OS protections and extract deleted data, browser caches, and metadata.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOLUTION OVERVIEW -->
+<section id="solution">
+    <div class="container">
+        <div class="section-label">The Solution</div>
+        <h2 class="section-title">Nothing to install. Nothing to find.</h2>
+        <p class="section-text">
+            in6.to runs entirely in the browser's incognito mode over a VPN connection. It enforces both — refusing to operate without them. There is no app, no extension, no file on the device. When the user closes the browser tab, the session is destroyed and no recoverable data remains on the device.
+        </p>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Three-tier user model</h3>
+        <div class="threat-scenarios" style="margin-bottom: 2.5rem;">
+            <div class="threat-card">
+                <div class="threat-icon" style="background: var(--accent-glow);">👥</div>
+                <h4>Mass users — cover traffic</h4>
+                <p>The largest audience. They read independent news safely through the platform, generating normal-looking traffic that provides cover for more active users.</p>
+            </div>
+            <div class="threat-card">
+                <div class="threat-icon" style="background: var(--accent-glow);">💬</div>
+                <h4>Active users — communication</h4>
+                <p>A smaller group using encrypted messaging and Telegram through the platform. Their activity blends in with mass users, providing additional cover for core activists.</p>
+            </div>
+            <div class="threat-card">
+                <div class="threat-icon" style="background: var(--accent-glow);">⚡</div>
+                <h4>Core activists — secure work</h4>
+                <p>The most protected tier. They use remote desktops and isolated applications for critical work, shielded by the traffic of all other users.</p>
+            </div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Available modules</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">The platform has a modular architecture — any web application can be added as a new module via nginx reverse proxy and iframe isolation. Modules can be private and invisible to other users. Each user or organization can have their own set of modules enabled.</p>
+
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-icon">💬</div>
+                <h4>Telegram</h4>
+                <p>Full web Telegram access with encrypted session storage</p>
+            </div>
+            <div class="module-card">
+                <div class="module-icon">🖥️</div>
+                <h4>Remote Desktop</h4>
+                <p>Parsec & Guacamole for secure remote computer access</p>
+            </div>
+            <div class="module-card" style="border-color: rgba(245, 158, 11, 0.2);">
+                <div class="module-icon">📱</div>
+                <h4>Android</h4>
+                <p>Remote Android emulator — use mobile apps without a trace <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.25rem;">IN PROGRESS</span></p>
+            </div>
+            <div class="module-card" style="border-color: rgba(245, 158, 11, 0.2);">
+                <div class="module-icon">🔒</div>
+                <h4>Internal Messenger</h4>
+                <p>Built-in E2E encrypted messaging between platform users <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.25rem;">IN PROGRESS</span></p>
+            </div>
+            <div class="module-card" style="border-style: dashed;">
+                <div class="module-icon" style="opacity: 0.4;">➕</div>
+                <h4>Any web app</h4>
+                <p>Add any web application as a private module — invisible to other users</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECURITY ARCHITECTURE -->
+<section class="threat-section" id="security">
+    <div class="container">
+        <div class="section-label">Security Architecture</div>
+        <h2 class="section-title">Defense in depth, designed for the worst case</h2>
+        <p class="section-text">
+            Every layer of the platform is built around a single question: what happens if they take the device right now? The answer should always be: nothing useful is found. The platform is at MVP stage — core protections are implemented and working, with further hardening underway.
+        </p>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--success); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">✓ Implemented</h3>
+        <div class="security-grid">
+            <div class="security-card">
+                <div class="card-number">01</div>
+                <h4>Client-side encryption for Telegram sessions</h4>
+                <p>Encryption keys are derived on the device from user credentials. Telegram session data is encrypted locally before being sent to the server. The server stores only encrypted blobs and cannot read session contents.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">02</div>
+                <h4>No phone, no email, no identity</h4>
+                <p>Authentication uses a numeric code and a graphical pattern — no personal identifiers required. Any combination creates a separate account. Currently ~10 billion possible combinations; planned upgrade to a quadrillion (see roadmap).</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">03</div>
+                <h4>Aggressive session termination</h4>
+                <p>Sessions are destroyed automatically upon: inactivity (60 seconds), tab losing focus, sudden device movement (phone grab scenario), and failure to re-authenticate during periodic checks.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">04</div>
+                <h4>Zero browser storage</h4>
+                <p>No localStorage, sessionStorage, cookies, or service workers. All state lives in JavaScript memory only. Aggressive cache-busting and storage-clearing HTTP headers (Cache-Control: no-store, Clear-Site-Data) on all responses.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">05</div>
+                <h4>Token security</h4>
+                <p>Session tokens are bound to the current IP address and device fingerprint. Any change triggers immediate invalidation. Tokens are deactivated server-side upon logout, inactivity, or connection loss.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">06</div>
+                <h4>Iframe isolation</h4>
+                <p>Login occurs in an isolated iframe that is destroyed after authentication, releasing credentials from memory. External apps run in sandboxed iframes with controlled, temporary tokens.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">07</div>
+                <h4>Decoy accounts</h4>
+                <p>If an incorrect re-authentication attempt is made, the original account is locked with exponential backoff, and the user is presented with an empty decoy account instead.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">08</div>
+                <h4>Enforced VPN + incognito</h4>
+                <p>The platform refuses to operate without both a VPN connection and incognito/private browsing mode. This is a hard requirement, not a recommendation — ensuring baseline protection for every user.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">09</div>
+                <h4>Page reload on logout</h4>
+                <p>Every logout triggers a full page reload to force browser garbage collection and clear any remaining JavaScript variables, closures, and DOM references from memory.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">10</div>
+                <h4>Cloudflare protection</h4>
+                <p>All traffic is routed through Cloudflare to prevent exposure of server IP addresses and provide DDoS protection. Server access is restricted to Cloudflare-originating requests only.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">11</div>
+                <h4>Anti-fake monitoring</h4>
+                <p>A network of automated bots monitors hundreds of Telegram chats for mentions and phishing attempts, instantly warning users about fake copies of the platform or social engineering attacks.</p>
+            </div>
+            <div class="security-card">
+                <div class="card-number">12</div>
+                <h4>Safe-page redirect on logout</h4>
+                <p>On logout, the browser is redirected to an innocent website (e.g. google.com) using location.replace(). Browser history shows only a normal site visit — there is no back-button trail leading to the platform.</p>
+            </div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--warning); margin-bottom: 1.25rem; margin-top: 3rem; font-family: 'JetBrains Mono', monospace;">⟳ In progress / Planned hardening</h3>
+        <div class="security-grid">
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);">
+                <div class="card-number" style="color: var(--warning);">→</div>
+                <h4>Full client-side encryption for all modules</h4>
+                <p>Extend client-side encryption beyond Telegram sessions to the internal messenger and all other stored data. Currently, some modules transmit data securely but don't yet encrypt at rest on the server.</p>
+            </div>
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);">
+                <div class="card-number" style="color: var(--warning);">→</div>
+                <h4>Full UI / API server separation</h4>
+                <p>Separate static UI and API onto different servers. Serve the UI as purely static files (e.g. via Cloudflare Pages) to minimize attack surface and prevent UI tampering even if the backend is compromised.</p>
+            </div>
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);">
+                <div class="card-number" style="color: var(--warning);">→</div>
+                <h4>Argon2 key derivation</h4>
+                <p>Replace current SHA-based key derivation with Argon2id for significantly stronger resistance against brute-force attacks on the authentication credentials.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+    <div class="container">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-title">From opening the browser to full protection</h2>
+        <p class="section-text">
+            The entire workflow is designed to be as simple as possible for non-technical users while maintaining maximum security. No configuration, no installation, no technical knowledge required.
+        </p>
+
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="flow-step-marker">1</div>
+                <div class="flow-step-content">
+                    <h4>Open a browser in incognito mode with VPN enabled</h4>
+                    <p>Even a built-in VPN (like Opera's) is sufficient. Navigate to the platform URL. The platform verifies both conditions before proceeding.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-marker">2</div>
+                <div class="flow-step-content">
+                    <h4>Authenticate with a visual pattern</h4>
+                    <p>Select 6 objects from a richly detailed picture (a "wimmelbook" illustration with hundreds of items). This sequence is your identity and encryption key source. No phone number, no email — nothing traceable.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-marker">3</div>
+                <div class="flow-step-content">
+                    <h4>Access your protected workspace</h4>
+                    <p>Your encrypted session is decrypted client-side. Use Telegram, remote desktops, Android emulator, or the internal messenger — all within the same protected interface.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-marker">4</div>
+                <div class="flow-step-content">
+                    <h4>Work, communicate, read the news</h4>
+                    <p>Everything you do stays within the platform. Session states are encrypted and stored server-side so you can pick up where you left off next time. The server sees only encrypted data.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-marker">5</div>
+                <div class="flow-step-content">
+                    <h4>Close the tab — everything vanishes</h4>
+                    <p>On logout (manual, automatic, or forced), the session is destroyed, browser history is replaced, the server-side token is invalidated, and the page reloads to clear memory. Nothing remains on the device.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SCREENSHOTS / MEDIA -->
+<section class="threat-section" id="screenshots">
+    <div class="container">
+        <div class="section-label">Interface</div>
+        <h2 class="section-title">Built for simplicity under pressure</h2>
+        <p class="section-text">
+            The interface is deliberately minimal. Under stress — when someone might be approaching — every fraction of a second counts. The UI is designed so users can navigate instinctively.
+        </p>
+        <a href="https://in6.to/" target="_blank" class="btn btn-primary" style="margin-bottom: 2rem;">Open App</a>
+
+        <div class="screenshots">
+            <div class="screenshot-wrap">
+                <div class="media-placeholder">
+                    <!-- TODO: Replace with actual screenshot or video -->
+                    <div class="media-placeholder-icon">🔐</div>
+                    <div class="media-placeholder-text">Login screen</div>
+                    <div class="media-placeholder-hint">Screenshot or short video</div>
+                </div>
+                <div class="screenshot-caption">Authentication — numeric code + graphical pattern, no personal identifiers</div>
+            </div>
+            <div class="screenshot-wrap">
+                <div class="media-placeholder">
+                    <!-- TODO: Replace with actual screenshot or video -->
+                    <div class="media-placeholder-icon">📋</div>
+                    <div class="media-placeholder-text">Main workspace</div>
+                    <div class="media-placeholder-hint">Screenshot or short video</div>
+                </div>
+                <div class="screenshot-caption">Protected workspace — switch between Telegram, Remote Desktop, Android, and Messenger</div>
+            </div>
+        </div>
+
+        <div class="screenshots" style="margin-top: 1.5rem;">
+            <div class="screenshot-wrap">
+                <div class="media-placeholder">
+                    <!-- TODO: Replace with actual screenshot or video -->
+                    <div class="media-placeholder-icon">💬</div>
+                    <div class="media-placeholder-text">Telegram module</div>
+                    <div class="media-placeholder-hint">Screenshot or short video</div>
+                </div>
+                <div class="screenshot-caption">Telegram — full web client with encrypted session storage, running inside the platform</div>
+            </div>
+            <div class="screenshot-wrap">
+                <div class="media-placeholder">
+                    <!-- TODO: Replace with actual screenshot or video -->
+                    <div class="media-placeholder-icon">🖥️</div>
+                    <div class="media-placeholder-text">Remote Desktop</div>
+                    <div class="media-placeholder-hint">Screenshot or short video</div>
+                </div>
+                <div class="screenshot-caption">Remote Desktop — access a full computer or Android device through the browser</div>
+            </div>
+        </div>
+
+        <div class="screenshots" style="margin-top: 1.5rem;">
+            <div class="screenshot-wrap" style="grid-column: 1 / -1;">
+                <div class="media-placeholder media-placeholder-wide">
+                    <!-- TODO: Replace with actual video demo -->
+                    <div class="media-placeholder-icon">▶️</div>
+                    <div class="media-placeholder-text">Full demo walkthrough</div>
+                    <div class="media-placeholder-hint">Short video (1–3 min) showing the full flow: login → workspace → logout → nothing remains</div>
+                </div>
+                <div class="screenshot-caption">End-to-end demonstration — from opening the browser to complete trace elimination</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TRACK RECORD -->
+<section class="track-section" id="track-record">
+    <div class="container">
+        <div class="section-label">Track Record</div>
+        <h2 class="section-title">Built by someone who understands the problem firsthand</h2>
+        <p class="section-text">
+            in6.to is developed by the same person behind several widely-used digital safety projects for communities living under authoritarian rule. These tools have collectively helped tens of thousands of people protect themselves from politically motivated prosecution.
+        </p>
+
+        <div class="track-item">
+            <div class="track-marker"></div>
+            <div>
+                <h4>Guardians (Khraniteli) — Digital trace cleanup for at-risk communities</h4>
+                <p>Launched in May 2023, Guardians helps thousands of people in Belarus identify and remove dangerous digital traces — old comments in public chats, group memberships, and other data that authorities actively use for criminal prosecution. The project includes automated tools, educational materials, and direct assistance.</p>
+                <a href="https://news.zerkalo.io/life/47730.html" class="track-link" target="_blank">Zerkalo.io — Coverage of the Guardians project →</a><br>
+                <a href="https://ru.hrodna.life/articles/hraniteli-grodno/" class="track-link" target="_blank">Hrodna.life — Guardians in the Hrodna region →</a><br>
+                <a href="https://mostmedia.io/2023/11/16/podgotovit-telegram-k-proverke/" class="track-link" target="_blank">MOST Media — How to prepare your Telegram account for a device inspection →</a>
+            </div>
+        </div>
+
+        <div class="track-item">
+            <div class="track-marker"></div>
+            <div>
+                <h4>@FindMessagesBot — Find your messages across all Telegram chats</h4>
+                <p>A Telegram bot that allows users to search for all their messages across all public chats — something Telegram itself doesn't provide. This tool is critical because authorities in repressive states are actively prosecuting people for comments made years ago in public groups. The bot has been used by tens of thousands of people to find and delete compromising messages.</p>
+                <a href="https://news.zerkalo.io/life/44455.html" class="track-link" target="_blank">Zerkalo.io — A Telegram bot to help delete old messages from chats →</a><br>
+                <a href="https://ru.belsat.eu/80857966/pravozashhitniki-zapustili-bot-dlya-poiska-staryh-soobshhenij-i-kommentariev-v-chatah-telegram" class="track-link" target="_blank">Belsat — Human rights defenders launch bot for finding old Telegram messages →</a>
+            </div>
+        </div>
+
+        <div class="track-item">
+            <div class="track-marker"></div>
+            <div>
+                <h4>Integration with P-Telegram</h4>
+                <p>Collaborated with the Belarusian Cyber Partisans team to integrate FindMessagesBot with P-Telegram — their security-focused Telegram client. The integration allows users to find and bulk-delete all their comments across all chats in a single action, significantly reducing the time and effort needed to clean up dangerous digital traces.</p>
+                <a href="https://www.by.cpartisans.org/post/perevernul-stranicu-razbor-zaderzhanija" class="track-link" target="_blank">Cyber Partisans — Case study: device seizure and inspection →</a>
+            </div>
+        </div>
+
+        <div class="field-tested-box">
+            <h4>✓ Field-tested under real conditions</h4>
+            <p>The platform has been used by activists inside Belarus. In at least one confirmed case, a user's home was raided and all electronics were confiscated for forensic analysis. The user had been using in6.to with VPN and incognito mode. They simply closed the browser before the seizure. The forensic analysis found nothing. No traces, no evidence, no prosecution.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="threat-section" id="roadmap">
+    <div class="container">
+        <div class="section-label">Roadmap</div>
+        <h2 class="section-title">Where this is going</h2>
+        <p class="section-text">
+            in6.to is at the MVP stage with core functionality working. Here's what's planned for further development with proper support.
+        </p>
+
+        <div class="roadmap-items">
+            <div class="roadmap-item">
+                <div class="roadmap-status next">Next</div>
+                <div>
+                    <h4>Wimmelbook visual login</h4>
+                    <p>Replace numeric PIN with a richly illustrated picture-based authentication — selecting 6 objects from 300+ items yields over a quadrillion combinations while being easy to remember.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status next">Next</div>
+                <div>
+                    <h4>Upgrade cryptographic primitives</h4>
+                    <p>Migrate from SHA-based key derivation to Argon2id for significantly stronger brute-force resistance. Increase authentication combinations from ~10 billion to over a quadrillion.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status planned">Planned</div>
+                <div>
+                    <h4>Anonymous channel reading and commenting — no Telegram account needed</h4>
+                    <p>Allow anyone to safely read content from Telegram channels without having a Telegram account at all. Users can also leave comments — which are posted anonymously on their behalf by platform-operated bots. This creates a large user base that provides cover traffic for more active users.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status planned">Planned</div>
+                <div>
+                    <h4>Security audit</h4>
+                    <p>Professional third-party security audit of the platform's architecture, cryptographic implementation, and operational security.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status planned">Planned</div>
+                <div>
+                    <h4>Open-source release</h4>
+                    <p>Publish the platform's source code publicly to enable community review, trust, and adoption by other organizations and NGOs.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status vision">Vision</div>
+                <div>
+                    <h4>Self-expanding trust network</h4>
+                    <p>An anonymous social layer where users invite trusted contacts, building verifiable chains of trust — enabling people to find each other safely, form communities, and collaborate without exposing their identity to the state.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status vision">Vision</div>
+                <div>
+                    <h4>Self-hosted deployments for NGOs</h4>
+                    <p>Package the platform so any human rights organization can deploy their own instance on their own infrastructure, for their own community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+    <div class="container">
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's talk</h2>
+        <p class="section-text">
+            Interested in the project, collaboration, funding, or a live demo? Reach out through secure channels.
+        </p>
+
+        <div class="contact-methods">
+            <a href="mailto:contact@in6.to" class="contact-item">
+                ✉️ contact@in6.to
+            </a>
+            <a href="mailto:in6to@proton.me" class="contact-item">
+                🔒 in6to@proton.me
+            </a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>in6.to · Built for people who need it most</p>
+</footer>
+
+</body>
+</html>
