@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -474,39 +473,93 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .media-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 220px;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-card) 100%);
-            border-bottom: 1px solid var(--border);
+        /* ===== DEMO VIDEOS ===== */
+        .demo-block {
+            margin-bottom: 2.5rem;
         }
 
-        .media-placeholder-wide {
-            min-height: 280px;
-        }
-
-        .media-placeholder-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            opacity: 0.5;
-        }
-
-        .media-placeholder-text {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
+        .demo-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             margin-bottom: 0.3rem;
         }
 
-        .media-placeholder-hint {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
+        .demo-description {
+            font-size: 0.85rem;
             color: var(--text-dim);
-            letter-spacing: 0.3px;
+            margin-bottom: 1rem;
+        }
+
+        .demo-pair {
+            display: flex;
+            gap: 1.25rem;
+            align-items: stretch;
+        }
+
+        .demo-video-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            position: relative;
+        }
+
+        .demo-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .demo-device-label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            background: rgba(10, 14, 23, 0.7);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .demo-video-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* Hide fallback when video has loaded content */
+        .demo-video-wrap video[data-loaded="true"] + .demo-video-fallback {
+            display: none;
+        }
+
+        .demo-desktop {
+            flex: 2;
+        }
+
+        .demo-mobile {
+            flex: 1;
+            max-width: 205px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-pair {
+                flex-direction: column;
+            }
+
+            .demo-mobile {
+                max-width: 100%;
+            }
         }
 
         /* ===== TRACK RECORD ===== */
@@ -645,6 +698,34 @@
             font-size: 0.85rem;
         }
 
+        /* ===== FAQ ===== */
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.75rem 0;
+        }
+
+        .faq-item:first-of-type {
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-question {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+
         /* ===== CONTACT ===== */
         .contact-section {
             text-align: center;
@@ -754,9 +835,10 @@
         <li><a href="#solution">Solution</a></li>
         <li><a href="#security">Security</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#screenshots">Demo</a></li>
+        <li><a href="#demo">Demo</a></li>
         <li><a href="#track-record">Track Record</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
     </ul>
 </nav>
@@ -765,9 +847,14 @@
 <section class="hero">
     <div class="hero-content">
         <div class="hero-badge">Active MVP · Used by activists</div>
-        <h1>A <span class="highlight">zero-trace</span> platform for secure communication in authoritarian states</h1>
+        <h1>A <span class="highlight">zero-trace</span> platform designed to leave nothing behind</h1>
         <p class="hero-subtitle">
-            in6.to is a browser-based platform that leaves nothing behind on the device. No app to install. No data to find. Close the tab — and everything disappears. Built for people in Belarus, Russia, and other repressive environments where accessing independent information or communicating freely can lead to prosecution. The goal is simple: let people exercise their basic rights without risking their safety.
+            Standard encrypted messengers protect your data from network surveillance. <strong>in6.to protects you from device confiscation and forced inspections.</strong>
+            <br>
+            It is a browser-based platform that leaves nothing behind — no app to install, no data to find. Close the tab — and everything disappears.
+        </p>
+        <p style="color: var(--text-dim); font-size: 0.95rem; font-style: italic; max-width: 620px; line-height: 1.7; margin-bottom: 2.5rem;">
+            Built for people living in authoritarian states where accessing independent information or communicating freely can lead to prosecution. The goal is simple: let people exercise their basic rights without risking their safety.
         </p>
         <div class="hero-cta">
             <a href="#how-it-works" class="btn btn-primary">How It Works ↓</a>
@@ -783,8 +870,13 @@
         <div class="section-label">The Problem</div>
         <h2 class="section-title">Digital repression is physical</h2>
         <p class="section-text">
-            In countries like Belarus, Russia, Turkmenistan, Iran, and others, authorities don't just monitor online activity — they confiscate devices on the street, during home raids, and at checkpoints. People are being sentenced to years in prison for old comments in Telegram chats. Even a subscription to an opposition channel can trigger criminal prosecution. People need a way to communicate, read independent news, and organize — without leaving any trace on their device.
+            In countries like Belarus, Russia, Turkmenistan, Iran, and others — as well as in occupied territories of Ukraine — authorities don't just monitor online activity. They confiscate devices on the street, during home raids, and at border crossings. People are being sentenced to years in prison for old comments in Telegram chats. Even a subscription to an opposition channel can trigger criminal prosecution. People need a way to communicate, read independent news, and organize — without leaving any trace on their device.
         </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary);">The Endpoint Vulnerability</h4>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin: 0;">Thanks to modern end-to-end encryption, network interception is largely a solved problem. But authoritarian regimes have adapted: they now target the physical endpoint. E2EE cannot protect users when security forces violently seize an unlocked phone on the street, or force them to open their secure apps at a border crossing. The mere presence of a secure messenger app on the home screen is now enough to trigger an arrest.</p>
+        </div>
 
         <div class="threat-scenarios">
             <div class="threat-card">
@@ -802,6 +894,11 @@
                 <h4>Forensic extraction</h4>
                 <p>Authorities use specialized hardware and software (Cellebrite, Oxygen Forensic, etc.) to bypass OS protections and extract deleted data, browser caches, and metadata.</p>
             </div>
+            <div class="threat-card">
+                <div class="threat-icon danger">🛡️</div>
+                <h4>Physical access defeats local storage</h4>
+                <p>E2EE protects data in transit, but the local device stores encrypted databases that become readable once unlocked. The app icon itself raises suspicion. Authorities routinely compel users to open their apps on-site.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -814,6 +911,16 @@
         <p class="section-text">
             in6.to runs entirely in the browser's incognito mode over a VPN connection. It enforces both — refusing to operate without them. There is no app, no extension, no file on the device. When the user closes the browser tab, the session is destroyed and no recoverable data remains on the device.
         </p>
+
+        <div style="background: rgba(59,130,246,0.06); border: 1px solid var(--accent-dim); border-radius: 10px; padding: 1.5rem 1.75rem; margin-bottom: 1.75rem;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.6rem;">Encryption in transit is only half the battle</div>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin: 0;">End-to-end encrypted apps are excellent at securing messages in transit. However, they are fundamentally designed for environments where the physical device remains secure. In repressive states, physical access is the primary threat vector. in6.to solves this specific, critical gap: it ensures there is absolutely nothing on the device to find.</p>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary);">The Device is No Longer a Vault. It's Just a Screen.</h4>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin: 0;">Instead of storing encrypted databases locally — where forensic tools like UFED can extract them if the OS is bypassed or the device unlocked — in6.to acts as a secure, ephemeral terminal. Users can access their favorite secure messengers and tools remotely through our platform. You get the world-class transit encryption of standard secure apps, combined with absolute zero-trace protection on the physical device.</p>
+        </div>
 
         <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Three-tier user model</h3>
         <div class="threat-scenarios" style="margin-bottom: 2.5rem;">
@@ -1011,68 +1118,101 @@
 </section>
 
 <!-- SCREENSHOTS / MEDIA -->
-<section class="threat-section" id="screenshots">
+<section class="threat-section" id="demo">
     <div class="container">
-        <div class="section-label">Interface</div>
+        <div class="section-label">Demo</div>
         <h2 class="section-title">Built for simplicity under pressure</h2>
         <p class="section-text">
             The interface is deliberately minimal. Under stress — when someone might be approaching — every fraction of a second counts. The UI is designed so users can navigate instinctively.
         </p>
         <a href="https://in6.to/" target="_blank" class="btn btn-primary" style="margin-bottom: 2rem;">Open App</a>
 
-        <div class="screenshots">
-            <div class="screenshot-wrap">
-                <div class="media-placeholder">
-                    <!-- TODO: Replace with actual screenshot or video -->
-                    <div class="media-placeholder-icon">🔐</div>
-                    <div class="media-placeholder-text">Login screen</div>
-                    <div class="media-placeholder-hint">Screenshot or short video</div>
+        <div class="demo-block">
+            <div class="demo-label">Authentication</div>
+            <div class="demo-description">Numeric code + graphical pattern — no personal identifiers, no phone number, no email</div>
+            <div class="demo-pair">
+                <div class="demo-video-wrap demo-desktop">
+                    <div class="demo-device-label">Desktop</div>
+                    <!-- Replace src with: demo-login-desktop.mp4 -->
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-login-desktop.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-login-desktop.mp4</div>
                 </div>
-                <div class="screenshot-caption">Authentication — numeric code + graphical pattern, no personal identifiers</div>
-            </div>
-            <div class="screenshot-wrap">
-                <div class="media-placeholder">
-                    <!-- TODO: Replace with actual screenshot or video -->
-                    <div class="media-placeholder-icon">📋</div>
-                    <div class="media-placeholder-text">Main workspace</div>
-                    <div class="media-placeholder-hint">Screenshot or short video</div>
+                <div class="demo-video-wrap demo-mobile">
+                    <div class="demo-device-label">Mobile</div>
+                    <!-- Replace src with: demo-login-mobile.mp4 -->
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-login-mobile.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-login-mobile.mp4</div>
                 </div>
-                <div class="screenshot-caption">Protected workspace — switch between Telegram, Remote Desktop, Android, and Messenger</div>
-            </div>
-        </div>
-
-        <div class="screenshots" style="margin-top: 1.5rem;">
-            <div class="screenshot-wrap">
-                <div class="media-placeholder">
-                    <!-- TODO: Replace with actual screenshot or video -->
-                    <div class="media-placeholder-icon">💬</div>
-                    <div class="media-placeholder-text">Telegram module</div>
-                    <div class="media-placeholder-hint">Screenshot or short video</div>
-                </div>
-                <div class="screenshot-caption">Telegram — full web client with encrypted session storage, running inside the platform</div>
-            </div>
-            <div class="screenshot-wrap">
-                <div class="media-placeholder">
-                    <!-- TODO: Replace with actual screenshot or video -->
-                    <div class="media-placeholder-icon">🖥️</div>
-                    <div class="media-placeholder-text">Remote Desktop</div>
-                    <div class="media-placeholder-hint">Screenshot or short video</div>
-                </div>
-                <div class="screenshot-caption">Remote Desktop — access a full computer or Android device through the browser</div>
             </div>
         </div>
 
-        <div class="screenshots" style="margin-top: 1.5rem;">
-            <div class="screenshot-wrap" style="grid-column: 1 / -1;">
-                <div class="media-placeholder media-placeholder-wide">
-                    <!-- TODO: Replace with actual video demo -->
-                    <div class="media-placeholder-icon">▶️</div>
-                    <div class="media-placeholder-text">Full demo walkthrough</div>
-                    <div class="media-placeholder-hint">Short video (1–3 min) showing the full flow: login → workspace → logout → nothing remains</div>
+        <div class="demo-block">
+            <div class="demo-label">Protected workspace</div>
+            <div class="demo-description">Switch between Telegram, Remote Desktop, Android, and Messenger — all within one interface</div>
+            <div class="demo-pair">
+                <div class="demo-video-wrap demo-desktop">
+                    <div class="demo-device-label">Desktop</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-workspace-desktop.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-workspace-desktop.mp4</div>
                 </div>
-                <div class="screenshot-caption">End-to-end demonstration — from opening the browser to complete trace elimination</div>
+                <div class="demo-video-wrap demo-mobile">
+                    <div class="demo-device-label">Mobile</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-workspace-mobile.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-workspace-mobile.mp4</div>
+                </div>
             </div>
         </div>
+
+        <div class="demo-block">
+            <div class="demo-label">Telegram module</div>
+            <div class="demo-description">Full web Telegram client with encrypted session storage, running inside the platform</div>
+            <div class="demo-pair">
+                <div class="demo-video-wrap demo-desktop">
+                    <div class="demo-device-label">Desktop</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-telegram-desktop.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-telegram-desktop.mp4</div>
+                </div>
+                <div class="demo-video-wrap demo-mobile">
+                    <div class="demo-device-label">Mobile</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-telegram-mobile.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-telegram-mobile.mp4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-block">
+            <div class="demo-label">Remote Desktop</div>
+            <div class="demo-description">Access a full computer or Android device through the browser</div>
+            <div class="demo-pair">
+                <div class="demo-video-wrap demo-desktop">
+                    <div class="demo-device-label">Desktop</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-remote-desktop.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-remote-desktop.mp4</div>
+                </div>
+                <div class="demo-video-wrap demo-mobile">
+                    <div class="demo-device-label">Mobile</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="demo-remote-mobile.mp4" type="video/mp4">
+                    </video>
+                    <div class="demo-video-fallback">demo-remote-mobile.mp4</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -1163,6 +1303,13 @@
             <div class="roadmap-item">
                 <div class="roadmap-status planned">Planned</div>
                 <div>
+                    <h4>VPN-free version with traffic masking</h4>
+                    <p>A simplified version of the platform that does not require a VPN. All communication would be routed through cloud storage gateways or domain fronting techniques, making platform traffic indistinguishable from ordinary visits to major, unblocked websites. This would dramatically lower the barrier to entry for users who cannot access or configure a VPN.</p>
+                </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status planned">Planned</div>
+                <div>
                     <h4>Open-source release</h4>
                     <p>Publish the platform's source code publicly to enable community review, trust, and adoption by other organizations and NGOs.</p>
                 </div>
@@ -1180,6 +1327,73 @@
                     <h4>Self-hosted deployments for NGOs</h4>
                     <p>Package the platform so any human rights organization can deploy their own instance on their own infrastructure, for their own community.</p>
                 </div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-status vision">Vision</div>
+                <div>
+                    <h4>Mesh network distribution</h4>
+                    <p>Explore decentralized distribution methods so the platform can remain accessible even if primary servers are blocked or taken down.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Common questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">Why not just use an encrypted messenger?</div>
+            <div class="faq-answer">
+                <p>End-to-end encrypted messengers are excellent at protecting message content in transit. However, they do not protect against the most common threat in authoritarian states: <strong>physical access to the device</strong>. When security forces take your phone — or force you to unlock it — all your chats, contacts, group memberships, and message history are fully visible, regardless of encryption. The app icon alone on your home screen can raise suspicion and trigger further inspection.</p>
+                <p>in6.to solves a different problem: it ensures there is <strong>nothing on the device to find</strong>. No app, no chat history, no contacts, no evidence of use. The two approaches are complementary — you can use encrypted messengers <em>inside</em> the platform, getting both encryption in transit and zero traces on the device.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Can I use this at a border crossing?</div>
+            <div class="faq-answer">
+                <p>This is one of the key scenarios. You can keep ordinary, locally approved apps on your phone (Viber, WhatsApp, a "clean" Telegram account), while your sensitive accounts — in banned or suspicious messengers — exist only inside the platform. At a border crossing, your device looks completely normal. There is no app to find, no suspicious browsing history, nothing that would prompt additional questions.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is this a complete guarantee of safety?</div>
+            <div class="faq-answer">
+                <p><strong>No, and we are transparent about this.</strong> The platform's protection boundaries end at the operating system level. It cannot defend against OS-level exploits, hardware keyloggers, or compromised firmware. If the operating system itself is compromised — for example, through spyware pre-installed by authorities — no browser-based solution can fully protect the user.</p>
+                <p>What the platform does guarantee is a <strong>high minimum floor of protection</strong> even for non-technical users: enforced VPN and incognito mode, automatic session destruction, zero traces in the browser, and defense against common physical inspection scenarios. For users who want additional protection, we provide guidance on disabling hibernation, swap files, and crash dumps at the OS level.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">What happens if someone forces me to show my browser?</div>
+            <div class="faq-answer">
+                <p>The platform has multiple layers of automatic protection for this scenario. Since users are forced to use the incognito mode, there is nothing to show. Sessions are terminated after 60 seconds of inactivity, when the tab loses focus, and on sudden device movement (the "phone grab" scenario). On termination, the browser is redirected to an innocent website like google.com — there is no back button trail. If someone forces you to open the app, it would behave as it's opened for the first time — furthermore, any combination is a new account.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Why does it require VPN and incognito mode?</div>
+            <div class="faq-answer">
+                <p>This is a deliberate "foolproof design" choice. VPN prevents the internet provider from seeing that you accessed the platform. Incognito mode ensures the browser itself doesn't save any cache, cookies, or history after the tab is closed. By enforcing both as hard requirements — the platform simply won't work without them — we guarantee a baseline level of protection for every user, even those who wouldn't think to enable these on their own.</p>
+                <p>That said, we recognize that VPN access itself can be difficult or restricted in some environments. A planned future direction is a simplified version of the platform that would not require a VPN, instead using traffic masking techniques such as domain fronting to make platform access indistinguishable from visits to major, unblocked websites.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">How does the user blend in with everyone else?</div>
+            <div class="faq-answer">
+                <p>The design philosophy is that a user should look indistinguishable from millions of ordinary people. Their social media is normal, their apps are normal, their device is clean. All sensitive activity happens only in incognito mode with VPN — closing the browser hides every visual trace that could trigger a deeper inspection. There are no red flags for a casual device check, which is often the first step before authorities decide to escalate to forensic analysis.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Can I do anything on my side to increase protection?</div>
+            <div class="faq-answer">
+                <p>Yes. The platform provides a strong baseline, but advanced users can further reduce risk at the OS level: disabling hibernation and swap files (which can retain memory contents on disk), turning off crash dumps, and ensuring the device is fully powered off when not in use. These steps help ensure that even sophisticated forensic tools cannot recover fragments of browser memory from the operating system.</p>
             </div>
         </div>
     </div>
@@ -1208,6 +1422,18 @@
 <footer>
     <p>in6.to · Built for people who need it most</p>
 </footer>
+
+<script>
+document.querySelectorAll('.demo-video-wrap video').forEach(video => {
+    video.addEventListener('loadeddata', () => {
+        video.setAttribute('data-loaded', 'true');
+        video.nextElementSibling.style.display = 'none';
+    });
+    video.addEventListener('error', () => {
+        video.style.display = 'none';
+    });
+});
+</script>
 
 </body>
 </html>
