@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>in6.to — Zero-Trace Platform for Secure Communication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-card: #151d2e; --bg-card-hover: #1a2540;
+            --accent: #3b82f6; --accent-dim: #1e40af; --accent-glow: rgba(59, 130, 246, 0.15);
+            --danger: #ef4444; --danger-dim: rgba(239, 68, 68, 0.15);
+            --success: #22c55e; --success-dim: rgba(34, 197, 94, 0.12); --warning: #f59e0b;
+            --text-primary: #e2e8f0; --text-secondary: #94a3b8; --text-dim: #64748b;
+            --border: #1e293b; --border-light: #2d3a4f;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.25rem; color: var(--accent); text-decoration: none; letter-spacing: -0.5px; }
+        .nav-links { display: flex; gap: 1.4rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: color 0.2s; white-space: nowrap; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -30%; width: 80vw; height: 80vw; border-radius: 50%; background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero-content { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 100px; background: var(--accent-glow); border: 1px solid var(--accent-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 2rem; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .hero h1 { font-family: 'Source Serif 4', serif; font-size: clamp(2.5rem, 5.5vw, 4.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .hero h1 .highlight { color: var(--accent); }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 650px; line-height: 1.8; margin-bottom: 2.5rem; }
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+        .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-light); }
+        .btn-secondary:hover { border-color: var(--text-dim); color: var(--text-primary); }
+        section { padding: 6rem 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 1rem; }
+        .section-title { font-family: 'Source Serif 4', serif; font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
+        .section-text { color: var(--text-secondary); font-size: 1.05rem; max-width: 700px; margin-bottom: 3rem; }
+        .threat-section { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .threat-scenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .threat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+        .threat-card:hover { border-color: var(--border-light); }
+        .threat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem; }
+        .threat-icon.danger { background: var(--danger-dim); }
+        .threat-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .threat-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+        .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .security-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; position: relative; transition: all 0.25s; }
+        .security-card:hover { border-color: var(--accent-dim); background: var(--bg-card-hover); }
+        .security-card .card-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.75rem; letter-spacing: 1px; }
+        .security-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; }
+        .security-card p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; }
+        .country-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .country-flip-card { height: 300px; perspective: 1200px; cursor: pointer; }
+        .country-flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1); }
+        .country-flip-card:hover .country-flip-inner, .country-flip-card.flipped .country-flip-inner { transform: rotateY(180deg); }
+        .country-flip-front, .country-flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 12px; padding: 1.5rem; box-sizing: border-box; display: flex; flex-direction: column; }
+        .country-flip-front { background: var(--bg-card); border: 1px solid var(--border); transition: border-color 0.3s; }
+        .country-flip-card:hover .country-flip-front { border-color: var(--accent-dim); }
+        .country-flip-back { background: rgba(6,16,30,0.99); border: 1px solid var(--accent-dim); transform: rotateY(180deg); overflow-y: auto; }
+        .country-flip-front h4 { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0; }
+        .country-threat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin: 0.65rem 0 0.35rem; }
+        .country-flip-front > p { color: var(--text-secondary); font-size: 0.83rem; line-height: 1.6; flex: 1; margin: 0; }
+        .country-flip-hint { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); text-align: right; margin-top: 0.75rem; padding-top: 0.65rem; border-top: 1px solid var(--border); letter-spacing: 0.3px; }
+        .country-evidence-label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.75rem; flex-shrink: 0; }
+        .country-flip-back ul { list-style: none; padding: 0; margin: 0; }
+        .country-flip-back li { margin-bottom: 0.7rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; }
+        .country-flip-back li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .country-flip-back li strong { display: block; color: var(--text-primary); font-size: 0.78rem; margin-bottom: 0.25rem; }
+        .country-flip-back li a { display: inline-block; margin-top: 0.35rem; color: var(--accent); font-size: 0.75rem; text-decoration: none; }
+        .country-flip-back li a:hover { text-decoration: underline; }
+        .flow-steps { position: relative; margin-top: 2rem; }
+        .flow-step { display: flex; gap: 2rem; margin-bottom: 3rem; align-items: flex-start; }
+        .flow-step-marker { flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; color: var(--accent); }
+        .flow-step-content h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .flow-step-content p { color: var(--text-secondary); font-size: 0.95rem; }
+        .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+        .module-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.2s; }
+        .module-card:hover { border-color: var(--accent-dim); }
+        .module-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .module-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .module-card p { color: var(--text-secondary); font-size: 0.8rem; }
+        .demo-block { margin-bottom: 2.5rem; }
+        .demo-label { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+        .demo-description { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem; }
+        .demo-pair { display: flex; gap: 1.25rem; align-items: stretch; }
+        .demo-video-wrap { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card); position: relative; }
+        .demo-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .demo-device-label { position: absolute; top: 0.5rem; left: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); background: rgba(10, 14, 23, 0.7); padding: 0.2rem 0.5rem; border-radius: 4px; z-index: 1; }
+        .demo-video-fallback { display: flex; align-items: center; justify-content: center; min-height: 200px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); }
+        .demo-video-wrap video[data-loaded="true"] + .demo-video-fallback { display: none; }
+        .demo-desktop { flex: 2; }
+        .demo-mobile { flex: 1; max-width: 205px; }
+        .track-section { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .track-item { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+        .track-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .track-marker { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-top: 0.5rem; }
+        .track-item h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .track-item p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
+        .track-item .track-link { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500; }
+        .track-item .track-link:hover { text-decoration: underline; }
+        .field-tested-box { background: var(--success-dim); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 12px; padding: 2rem; margin-top: 2rem; }
+        .field-tested-box h4 { color: var(--success); font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .field-tested-box p { color: var(--text-secondary); font-size: 0.95rem; }
+        .roadmap-items { margin-top: 2rem; }
+        .roadmap-item { display: flex; gap: 1.25rem; align-items: flex-start; margin-bottom: 1.5rem; }
+        .roadmap-status { flex-shrink: 0; padding: 0.2rem 0.6rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.25rem; min-width: 70px; text-align: center; }
+        .roadmap-status.next { background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent-dim); }
+        .roadmap-status.planned { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.25); }
+        .roadmap-status.vision { background: rgba(148, 163, 184, 0.08); color: var(--text-dim); border: 1px solid var(--border); }
+        .roadmap-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .roadmap-item p { color: var(--text-secondary); font-size: 0.85rem; }
+        .vision-cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .vision-case { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; transition: border-color 0.2s; }
+        .vision-case:hover { border-color: var(--border-light); }
+        .vision-case-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .vision-case h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .vision-case .vision-scenario { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.75rem; }
+        .vision-case .vision-zero-trace { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); padding-top: 0.75rem; border-top: 1px solid var(--border); line-height: 1.5; }
+        .faq-item { border-bottom: 1px solid var(--border); padding: 1.75rem 0; }
+        .faq-item:first-of-type { border-top: 1px solid var(--border); }
+        .faq-question { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .faq-answer p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; }
+        .faq-answer p:last-child { margin-bottom: 0; }
+        .contact-section { text-align: center; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+        .contact-section .section-title { margin-bottom: 1rem; }
+        .contact-section .section-text { margin: 0 auto 2rem; }
+        .contact-methods { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        .contact-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-primary); text-decoration: none; transition: all 0.2s; }
+        .contact-item:hover { border-color: var(--accent-dim); background: var(--bg-card-hover); }
+        footer { padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.8rem; border-top: 1px solid var(--border); }
+        @media (max-width: 768px) {
+            nav { padding: 0.75rem 1rem; } .nav-links { display: none; } section { padding: 4rem 1.25rem; }
+            .hero { padding: 6rem 1.25rem 3rem; } .flow-step { flex-direction: column; gap: 0.75rem; }
+            .threat-scenarios, .security-grid { grid-template-columns: 1fr; } .modules-grid { grid-template-columns: repeat(2, 1fr); } .track-item { flex-direction: column; gap: 0.75rem; }
+            .roadmap-item { flex-direction: column; gap: 0.5rem; } .demo-pair { flex-direction: column; } .demo-mobile { max-width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .modules-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="#" class="nav-logo">in6.to</a>
+    <ul class="nav-links">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#track-record">Track Record</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">Active MVP · Field-tested · Open-source planned</div>
+        <h1>A <span class="highlight">zero-trace</span> platform designed to leave nothing behind</h1>
+        <p class="hero-subtitle">
+            Encrypted messengers protect data in transit. <strong>in6.to protects people when their device is physically seized.</strong>
+            <br>
+            A browser-based platform that leaves no app, no data, and no trace on the device. Close the tab — everything disappears. Built for journalists, activists, and ordinary people in authoritarian states.
+        </p>
+        <div class="hero-cta">
+            <a href="#how-it-works" class="btn btn-primary">How It Works ↓</a>
+            <a href="https://in6.to/" target="_blank" class="btn btn-primary">Open App</a>
+            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+        </div>
+    </div>
+</section>
+
+<section class="threat-section" id="problem">
+    <div class="container">
+        <div class="section-label">The Problem</div>
+        <h2 class="section-title">Digital repression is physical</h2>
+        <p class="section-text">
+            In countries like Belarus, Russia, Iran, Myanmar, China, and others — as well as in occupied territories of Ukraine — authorities don't just monitor online traffic. They confiscate devices on the street, during home raids, and at border crossings, then use forensic tools to extract browsing history, app data, and subscriptions. People are sentenced to prison for old chat messages. Even a subscription to an independent news channel can trigger prosecution. End-to-end encryption solves network interception — but it does not protect users when their unlocked device is in someone else's hands.
+        </p>
+        <div class="threat-scenarios">
+            <div class="threat-card"><div class="threat-icon danger">📱</div><h4>Device inspections</h4><p>At checkpoints, borders, and during street stops, police demand to unlock devices on the spot. Any "suspicious" app, subscription, or chat history becomes evidence. Even if a secure app is deleted, the operating system retains logs of its name and usage time — permanent evidence that the app was used.</p></div>
+            <div class="threat-card"><div class="threat-icon danger">🔬</div><h4>Forensic extraction</h4><p>Authorities use specialized tools (Cellebrite, Oxygen Forensic) to bypass OS protections and recover deleted data, browser caches, and metadata. E2EE protects transit — but local encrypted databases become readable once the device is unlocked or the OS bypassed.</p></div>
+        </div>
+
+        <div style="margin-top: 2.5rem;">
+            <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 0.75rem; font-family: 'JetBrains Mono', monospace;">Documented across multiple countries</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.5rem;">The following cards summarize findings from international human rights organizations. Each claim is linked to its source.</p>
+            <p style="color: var(--text-dim); font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">Hover over a card (or tap on mobile) to see verified reports.</p>
+            <div class="country-cards-grid">
+                <!-- Belarus -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>Belarus</h4>
+                            <div class="country-threat-label">The Threat</div>
+                            <p>Mass routine phone checks at border crossings. Subscribing to independent news channels — which the state labels as "extremist materials" — can result in device confiscation and criminal charges.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Viasna Human Rights Center</strong>Documents the widespread practice at border crossings where "people are interrogated, their phones are checked." Subscriptions to independent media or photos on the phone become grounds for detention.<br><a href="https://spring96.org/en/news/116257" target="_blank" rel="noopener">Read Viasna Report →</a></li>
+                                <li><strong>Human Rights Watch</strong>Notes that authorities widely use "extremism" charges against individuals for "leaving critical comments on social media, following 'extremist' Telegram channels", specifically targeting those returning from abroad.<br><a href="https://www.hrw.org/world-report/2024/country-chapters/belarus" target="_blank" rel="noopener">Read HRW Report →</a></li>
+                                <li><strong>UN OHCHR Findings</strong>The report documents how security forces use the "examination of detainees' subscriptions" to independent media as a primary grounds for politically motivated arrests and "extremism" charges.<br><a href="https://docs.un.org/en/A/HRC/59/59" target="_blank" rel="noopener">Read UN Statement →</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Russia -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>Russia</h4>
+                            <div class="country-threat-label">The Threat</div>
+                            <p>Laws penalize the "intentional search" for independent media. Systematic device inspections target digital footprints, turning private browsing into grounds for prosecution.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Amnesty International</strong>Warns that new "anti-extremism" amendments could punish people simply for accessing independent media or "extremist" content online.<br><a href="https://www.amnesty.org/en/latest/news/2025/07/russia-proposed-amendments-to-counter-extremism-laws-escalate-assault-on-dissent/" target="_blank" rel="noopener">Read Amnesty Report →</a></li>
+                                <li><strong>Human Rights Watch</strong>Documents the July 2025 amendments that introduced fines for "intentional search for extremist content".<br><a href="https://www.hrw.org/world-report/2026/country-chapters/russia" target="_blank" rel="noopener">Read HRW Report →</a></li>
+                                <li><strong>OVD-Info</strong>FSB officers conduct a "meticulous screening" of individuals, where "phones are searched" for "suspicious" information or forbidden content.<br><a href="https://reports.ovd.info/en/repression-russia-2025-overview-ovd-info" target="_blank" rel="noopener">Read OVD Report</a> <a href="https://ovd.info/2025/08/20/granitsa" target="_blank" rel="noopener">(+ extra)</a> →</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- China -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>China <span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 400;">(Tibet &amp; Xinjiang)</span></h4>
+                            <div class="country-threat-label">The Threat</div>
+                            <p>At regional checkpoints, police use automated tools (IJOP) and manual searches to scan phones for "illegal" apps like WhatsApp, Telegram, or VPNs.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Human Rights Watch (Xinjiang)</strong>Directly confirms that the police app "labels the use of 51 network tools as suspicious", including "Viber, WhatsApp, and Telegram".<br><a href="https://www.hrw.org/report/2019/05/01/chinas-algorithms-repression/reverse-engineering-xinjiang-police-mass" target="_blank" rel="noopener">Read HRW Investigation →</a></li>
+                                <li><strong>Human Rights Watch (Tibet)</strong>Documents systemic phone inspections at checkpoints where "simply using a cellphone has become dangerous" due to criminalization of "illegal" digital content.<br><a href="https://www.hrw.org/news/2025/04/13/china-police-arrest-tibetans-for-internet-phone-use" target="_blank" rel="noopener">Read HRW Report →</a></li>
+                                <li><strong>Human Rights Watch</strong>Authorities maintain "one of the world's most stringent surveillance and censorship regimes", using new 2025 laws to "ban the circulation of unauthorized religious content online".<br><a href="https://www.hrw.org/world-report/2026/country-chapters/china" target="_blank" rel="noopener">Read HRW Report →</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Myanmar -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>Myanmar</h4>
+                            <div class="country-threat-label">The Threat</div>
+                            <p>Expansive laws broaden state surveillance powers. Phone data is used as evidence in criminal prosecutions against critics of the military junta.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Human Rights Watch</strong>The junta enacted a "cybersecurity law that further restricts online content and expands surveillance".<br><a href="https://www.hrw.org/world-report/2026/country-chapters/myanmar" target="_blank" rel="noopener">Read HRW Report →</a></li>
+                                <li><strong>Freedom House</strong>The military "severely restricted internet access" while "removing key protections against arbitrary surveillance".<br><a href="https://freedomhouse.org/country/myanmar/freedom-world/2025" target="_blank" rel="noopener">Read Freedom House Report →</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Iran -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>Iran</h4>
+                            <div class="country-threat-label">The Threat</div>
+                            <p>Authorities routinely seize phones to extract private messages. Blocked apps or critical posts can lead to interrogations and multiyear prison terms.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Committee to Protect Journalists</strong>Reports on security officials seizing devices: "You can give us your password the easy way, or the hard way... [they] went through my Twitter, WhatsApp, Telegram, and Gmail".<br><a href="https://cpj.org/2023/02/irans-seizure-of-detained-journalists-devices-raises-fears-of-fresh-arrests-convictions/" target="_blank" rel="noopener">Read CPJ Report →</a></li>
+                                <li><strong>Freedom House</strong>Documents how the state uses extensive surveillance against internet users: "Several online users were handed multiyear prison sentences, and several people received death sentences, in connection with their online content".<br><a href="https://freedomhouse.org/country/iran/freedom-net/2024" target="_blank" rel="noopener">Read Freedom House Report →</a></li>
+                                <li><strong>Amnesty International</strong>Confirms systemic digital repression where authorities "continued to block or filter mobile apps and social media platforms", filing criminal cases against hundreds simply for their online criticism.<br><a href="https://www.amnesty.org/en/location/middle-east-and-north-africa/middle-east/iran/report-iran/" target="_blank" rel="noopener">Read Amnesty Report →</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Global -->
+                <div class="country-flip-card">
+                    <div class="country-flip-inner">
+                        <div class="country-flip-front">
+                            <h4>Global Reality</h4>
+                            <div class="country-threat-label">The Offline Danger</div>
+                            <p>E2EE does not protect against physical device seizure. Forensic extraction tools can bypass app security and recover deleted data.</p>
+                            <div class="country-flip-hint">see reports →</div>
+                        </div>
+                        <div class="country-flip-back">
+                            <div class="country-evidence-label">Verified Evidence</div>
+                            <ul>
+                                <li><strong>Committee to Protect Journalists</strong>"Mobile device forensics tools can recover deleted data, as well as lots of data that isn't visible to the naked eye when scrolling."<br><a href="https://cpj.org/2022/12/forensic-tools-open-new-front-for-using-phone-data-to-prosecute-journalists/" target="_blank" rel="noopener">Read CPJ Investigation →</a></li>
+                                <li><strong>Freedom House (Global)</strong>"In a record 55 of the 70 countries covered... people faced legal repercussions for expressing themselves online."<br><a href="https://freedomhouse.org/report/freedom-net/2023/repressive-power-artificial-intelligence" target="_blank" rel="noopener">Read Global Report →</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-dim); text-align: center; opacity: 0.8;">
+                <p><em>* Based on documented cases from international human rights organizations linked above. Practices vary by region.</em></p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="solution">
+    <div class="container">
+        <div class="section-label">The Solution</div>
+        <h2 class="section-title">Nothing to install. Nothing to find.</h2>
+        <p class="section-text">in6.to is a browser-based platform that runs entirely in incognito mode over a VPN connection, enforcing both as hard requirements. There is no app, no extension, no file on the device. When the user closes the tab, the session is destroyed and no recoverable data remains.</p>
+
+        <div style="background: rgba(59,130,246,0.06); border: 1px solid var(--accent-dim); border-radius: 10px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.6rem;">The core insight</div>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">Secure messengers try to <em>hide</em> data on the device — behind encryption, behind secret chats, behind disappearing messages. But the device still knows the app exists. Operating system logs record its name and usage time. Forensic tools find its database automatically. The app icon itself invites suspicion.</p>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin: 0;">in6.to takes a different approach: <strong>remove the data from the device entirely.</strong> The device becomes a screen, not a vault. The operating system sees only a normal browser. There is no app to find, no database to extract, no usage pattern that stands out from millions of ordinary browsing sessions.</p>
+        </div>
+        <p style="color: var(--text-dim); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 2.5rem;">The platform is built for open-source release. The codebase will allow organizations to deploy independent instances if needed.</p>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">How in6.to relates to existing tools</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">in6.to does not replace other security tools — it fills a specific gap: what happens when someone physically takes your device.</p>
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--accent-glow); display: flex; align-items: center; justify-content: center; font-size: 1rem;">🔒</div>
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem;">E2EE messengers <span style="font-weight: 400; color: var(--text-dim); font-size: 0.8rem;">(Signal, Telegram, Briar, Session)</span></h4>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin: 0;">Protect message content in transit. But the app is visible on the device, its database is recoverable with forensic tools, and the operating system permanently logs its name and usage time — even after deletion. in6.to lets users access these messengers remotely, through a normal browser that leaves no distinct footprint. The approaches are complementary.</p>
+                </div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--accent-glow); display: flex; align-items: center; justify-content: center; font-size: 1rem;">💻</div>
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem;">Privacy-focused OSes <span style="font-weight: 400; color: var(--text-dim); font-size: 0.8rem;">(Tails, Whonix, Qubes OS)</span></h4>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin: 0;">Excellent solutions — Tails leaves no traces by design. But they require a separate USB drive or dedicated hardware, technical setup, and cannot run on a phone. in6.to works in any browser on any device, including mobile. For advanced users, the tools can be combined for layered protection.</p>
+                </div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--accent-glow); display: flex; align-items: center; justify-content: center; font-size: 1rem;">☁️</div>
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem;">Remote browsers <span style="font-weight: 400; color: var(--text-dim); font-size: 0.8rem;">(Authentic8 Silo, Kasm Workspaces)</span></h4>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin: 0;">Enterprise tools that isolate browsing from the local device. They solve a similar technical problem but are designed for corporate IT security, not for people under physical threat. They require organization accounts and lack features like instant session destruction on movement, decoy accounts, or identity-free authentication.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Three-tier user model</h3>
+        <div class="threat-scenarios" style="margin-bottom: 2.5rem;">
+            <div class="threat-card"><div class="threat-icon" style="background: var(--accent-glow);">👥</div><h4>Mass users — cover traffic</h4><p>The largest audience. They read independent news safely through the platform, generating normal-looking traffic that provides cover for more active users.</p></div>
+            <div class="threat-card"><div class="threat-icon" style="background: var(--accent-glow);">💬</div><h4>Active users — communication</h4><p>A smaller group using encrypted messaging and Telegram through the platform. Their activity blends in with mass users.</p></div>
+            <div class="threat-card"><div class="threat-icon" style="background: var(--accent-glow);">⚡</div><h4>Core activists — secure work</h4><p>The most protected tier. They use remote desktops and isolated applications for critical work, shielded by the traffic of all other users.</p></div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Modular architecture</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.75rem;">Any web application can be added as a module via nginx reverse proxy and iframe isolation. The platform intercepts and encrypts each app's browser storage (cookies, localStorage, sessions), saving them server-side. On next login, these states are decrypted and injected back — so the user logs into a web app once, and it stays authenticated across sessions without ever touching the device's real storage.</p>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem;">Modules can be private and invisible to other users. Each user or organization can have their own set enabled.</p>
+        <div class="modules-grid">
+            <div class="module-card"><div class="module-icon">💬</div><h4>Telegram</h4><p>Full web client with encrypted session storage</p></div>
+            <div class="module-card"><div class="module-icon">🖥️</div><h4>Remote Desktop</h4><p>Parsec & Guacamole for remote computer access</p></div>
+            <div class="module-card" style="border-color: rgba(245, 158, 11, 0.2);"><div class="module-icon">📱</div><h4>Android</h4><p>Remote emulator — mobile apps without a trace <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 0.15rem 0.4rem; border-radius: 4px;">IN PROGRESS</span></p></div>
+            <div class="module-card" style="border-color: rgba(245, 158, 11, 0.2);"><div class="module-icon">🔒</div><h4>Internal Messenger</h4><p>Built-in E2E encrypted messaging <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 0.15rem 0.4rem; border-radius: 4px;">IN PROGRESS</span></p></div>
+            <div class="module-card" style="border-color: rgba(148, 163, 184, 0.15);"><div class="module-icon" style="opacity: 0.6;">📝</div><h4>CryptPad / Notes</h4><p>E2EE documents and notes — no local files <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); background: rgba(148, 163, 184, 0.08); padding: 0.15rem 0.4rem; border-radius: 4px;">PLANNED</span></p></div>
+            <div class="module-card" style="border-style: dashed;"><div class="module-icon" style="opacity: 0.4;">➕</div><h4>Any web app</h4><p>Add any application as a private module</p></div>
+        </div>
+    </div>
+</section>
+<section class="threat-section" id="security">
+    <div class="container">
+        <div class="section-label">Security Architecture</div>
+        <h2 class="section-title">Defense in depth, designed for the worst case</h2>
+        <p class="section-text">Every layer is built around a single question: what happens if they take the device right now? The platform is at MVP stage — core protections are implemented, with further hardening underway.</p>
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 2.5rem;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 0.6rem;">Technical stack</div>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin: 0;">Frontend: single-page React application with in-memory state only — no persistent storage APIs used. Backend: Ruby on Rails API server behind Cloudflare. External apps (Telegram Web, Guacamole, Parsec) are loaded in sandboxed iframes with per-session tokens. Authentication keys are derived client-side; the server stores only encrypted blobs it cannot decrypt. All communication over TLS. Infrastructure designed for UI/API separation — static frontend served independently (e.g. via Cloudflare Pages) to prevent UI tampering even if the backend is compromised.</p>
+        </div>
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--success); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">✓ Implemented</h3>
+        <div class="security-grid">
+            <div class="security-card"><div class="card-number">01</div><h4>Client-side encryption for Telegram sessions</h4><p>Encryption keys are derived on the device from user credentials. Telegram session data is encrypted locally before being sent to the server. By design, the API server receives and stores only encrypted blobs it cannot decrypt.</p></div>
+            <div class="security-card"><div class="card-number">02</div><h4>No phone, no email, no identity</h4><p>Authentication uses a numeric code and a graphical pattern — no personal identifiers required. Any combination creates a separate account. Currently ~10 billion possible combinations; planned upgrade to a quadrillion.</p></div>
+            <div class="security-card"><div class="card-number">03</div><h4>Aggressive session termination</h4><p>Sessions are destroyed automatically upon: inactivity (60s), tab losing focus, sudden device movement (phone grab scenario), and failure to re-authenticate during periodic checks.</p></div>
+            <div class="security-card"><div class="card-number">04</div><h4>Zero browser storage</h4><p>No localStorage, sessionStorage, cookies, or service workers. All state lives in JavaScript memory only. Aggressive cache-busting headers (Cache-Control: no-store, Clear-Site-Data) on all responses.</p></div>
+            <div class="security-card"><div class="card-number">05</div><h4>Token security</h4><p>Session tokens are bound to IP address and device fingerprint. Any change triggers immediate invalidation. Tokens are deactivated server-side upon logout, inactivity, or connection loss.</p></div>
+            <div class="security-card"><div class="card-number">06</div><h4>Iframe isolation</h4><p>Login occurs in an isolated iframe that is destroyed after authentication, releasing credentials from memory. External apps run in sandboxed iframes with controlled, temporary tokens.</p></div>
+            <div class="security-card"><div class="card-number">07</div><h4>Decoy accounts</h4><p>Incorrect re-authentication locks the original account and presents an empty decoy. This protects against coerced login — entering a wrong pattern deliberately shows an empty account.</p></div>
+            <div class="security-card"><div class="card-number">08</div><h4>Enforced VPN + incognito</h4><p>The platform refuses to operate without both. This is a hard requirement, not a recommendation — ensuring baseline protection for every user.</p></div>
+            <div class="security-card"><div class="card-number">09</div><h4>Full browser history erasure</h4><p>All navigation state is kept in an in-memory router. On logout, location.replace() redirects to an innocent site (e.g. google.com). The browser's back button shows no trace of the platform — only a normal site visit.</p></div>
+            <div class="security-card"><div class="card-number">10</div><h4>Server-side connection keepalive</h4><p>A persistent connection to the server ensures that if the device goes offline — whether from network loss or physical seizure — the token is automatically deactivated server-side within seconds.</p></div>
+            <div class="security-card"><div class="card-number">11</div><h4>Cloudflare protection</h4><p>All traffic is routed through Cloudflare to prevent exposure of server IP addresses and provide DDoS protection. Server access is restricted to Cloudflare-originating requests only.</p></div>
+            <div class="security-card"><div class="card-number">12</div><h4>Anti-fake monitoring</h4><p>A network of automated bots monitors hundreds of Telegram chats for mentions and phishing attempts, instantly warning users about fake copies of the platform or social engineering attacks.</p></div>
+        </div>
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--warning); margin-bottom: 1.25rem; margin-top: 3rem; font-family: 'JetBrains Mono', monospace;">⟳ Planned hardening</h3>
+        <div class="security-grid">
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);"><div class="card-number" style="color: var(--warning);">→</div><h4>Full client-side encryption for all modules</h4><p>Extend encryption beyond Telegram sessions to all stored data.</p></div>
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);"><div class="card-number" style="color: var(--warning);">→</div><h4>UI / API server separation</h4><p>Serve UI as static files via Cloudflare Pages to minimize attack surface.</p></div>
+            <div class="security-card" style="border-color: rgba(245, 158, 11, 0.2);"><div class="card-number" style="color: var(--warning);">→</div><h4>Argon2 key derivation</h4><p>Replace SHA-based derivation with Argon2id for stronger brute-force resistance.</p></div>
+        </div>
+
+        <!-- OTF-CRITICAL: Known limitations and adversary perspective -->
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--danger); margin-bottom: 1.25rem; margin-top: 3rem; font-family: 'JetBrains Mono', monospace;">Threat model boundaries</h3>
+        <div style="background: var(--bg-card); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 12px; padding: 1.75rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem;">The platform is designed to protect against physical device inspections, forensic extraction of local data, and coerced access. It does not claim to protect against all possible threats. We are transparent about the boundaries:</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.75rem;"><strong style="color: var(--text-primary);">OS-level compromise.</strong> If the operating system itself is compromised — through pre-installed spyware, a compromised firmware, or a hardware keylogger — no browser-based solution can fully protect the user. The platform's protection boundary ends at the OS level.</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.75rem;"><strong style="color: var(--text-primary);">Memory forensics.</strong> While JavaScript memory is cleared on logout, operating system swap files or hibernation images could theoretically retain fragments. We provide guidance to advanced users on disabling these, but it is not enforceable from the browser.</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.75rem;"><strong style="color: var(--text-primary);">Centralized infrastructure.</strong> The platform currently depends on a central server. This is a known single point of failure. The roadmap includes self-hosted deployments for NGOs and mesh distribution to mitigate this.</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin: 0;"><strong style="color: var(--text-primary);">Not yet audited.</strong> The platform has not undergone a professional third-party security audit. This is a planned deliverable — see the roadmap.</p>
+        </div>
+    </div>
+</section>
+<section id="how-it-works">
+    <div class="container">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-title">From opening the browser to full protection</h2>
+        <p class="section-text">Designed to be as simple as possible for non-technical users. No configuration, no installation, no technical knowledge required.</p>
+        <div class="flow-steps">
+            <div class="flow-step"><div class="flow-step-marker">1</div><div class="flow-step-content"><h4>Open a browser in incognito mode with VPN enabled</h4><p>Even a built-in VPN (like Opera's) is sufficient. The platform verifies both conditions before proceeding.</p></div></div>
+            <div class="flow-step"><div class="flow-step-marker">2</div><div class="flow-step-content"><h4>Authenticate with a visual pattern</h4><p>Select 6 objects from a detailed illustration with hundreds of items. This sequence is your identity and encryption key source. No phone number, no email — nothing traceable.</p></div></div>
+            <div class="flow-step"><div class="flow-step-marker">3</div><div class="flow-step-content"><h4>Access your protected workspace</h4><p>Your encrypted session is decrypted client-side. Use Telegram, remote desktops, Android emulator, or the internal messenger — all within the same interface.</p></div></div>
+            <div class="flow-step"><div class="flow-step-marker">4</div><div class="flow-step-content"><h4>Work, communicate, read the news</h4><p>Everything stays within the platform. Session states are encrypted and stored server-side so you can resume next time. The server sees only encrypted data.</p></div></div>
+            <div class="flow-step"><div class="flow-step-marker">5</div><div class="flow-step-content"><h4>Close the tab — everything vanishes</h4><p>The session is destroyed, browser history is replaced with an innocent site, the server-side token is invalidated, and memory is cleared. Nothing remains on the device.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="threat-section" id="demo">
+    <div class="container">
+        <div class="section-label">Demo</div>
+        <h2 class="section-title">Built for simplicity under pressure</h2>
+        <p class="section-text">The interface is deliberately minimal. Under stress, every second counts. The UI is designed so users can navigate instinctively.</p>
+        <a href="https://in6.to/" target="_blank" class="btn btn-primary" style="margin-bottom: 2rem;">Open App</a>
+        <div class="demo-block"><div class="demo-label">Authentication</div><div class="demo-description">Numeric code + graphical pattern — no personal identifiers</div><div class="demo-pair"><div class="demo-video-wrap demo-desktop"><div class="demo-device-label">Desktop</div><video autoplay loop muted playsinline><source src="demo-login-desktop.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-login-desktop.mp4</div></div><div class="demo-video-wrap demo-mobile"><div class="demo-device-label">Mobile</div><video autoplay loop muted playsinline><source src="demo-login-mobile.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-login-mobile.mp4</div></div></div></div>
+        <div class="demo-block"><div class="demo-label">Protected workspace</div><div class="demo-description">Switch between Telegram, Remote Desktop, Android, and Messenger</div><div class="demo-pair"><div class="demo-video-wrap demo-desktop"><div class="demo-device-label">Desktop</div><video autoplay loop muted playsinline><source src="demo-workspace-desktop.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-workspace-desktop.mp4</div></div><div class="demo-video-wrap demo-mobile"><div class="demo-device-label">Mobile</div><video autoplay loop muted playsinline><source src="demo-workspace-mobile.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-workspace-mobile.mp4</div></div></div></div>
+        <div class="demo-block"><div class="demo-label">Telegram module</div><div class="demo-description">Full web Telegram client with encrypted session storage</div><div class="demo-pair"><div class="demo-video-wrap demo-desktop"><div class="demo-device-label">Desktop</div><video autoplay loop muted playsinline><source src="demo-telegram-desktop.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-telegram-desktop.mp4</div></div><div class="demo-video-wrap demo-mobile"><div class="demo-device-label">Mobile</div><video autoplay loop muted playsinline><source src="demo-telegram-mobile.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-telegram-mobile.mp4</div></div></div></div>
+        <div class="demo-block"><div class="demo-label">Remote Desktop</div><div class="demo-description">Access a full computer or Android device through the browser</div><div class="demo-pair"><div class="demo-video-wrap demo-desktop"><div class="demo-device-label">Desktop</div><video autoplay loop muted playsinline><source src="demo-remote-desktop.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-remote-desktop.mp4</div></div><div class="demo-video-wrap demo-mobile"><div class="demo-device-label">Mobile</div><video autoplay loop muted playsinline><source src="demo-remote-mobile.mp4" type="video/mp4"></video><div class="demo-video-fallback">demo-remote-mobile.mp4</div></div></div></div>
+    </div>
+</section>
+
+<section class="track-section" id="track-record">
+    <div class="container">
+        <div class="section-label">Track Record & Community</div>
+        <h2 class="section-title">Built from firsthand experience with the problem</h2>
+        <p class="section-text">in6.to is developed by the same person behind several digital safety projects used by hundreds of thousands of people in Belarus. These tools are used as data sources by established human rights organizations including Viasna and DissidentBy.</p>
+        <div class="track-item"><div class="track-marker"></div><div>
+            <h4>Guardians (Khraniteli) — Digital trace cleanup at scale</h4>
+            <p>A proactive system that identifies people at risk of prosecution for old Telegram activity and helps them remove dangerous traces. Directly reached over 129,000 people with personalized warnings about their compromising messages. The search bot has been used by over 64,000 people. Anti-fake bots monitor over 1,500 chats.</p>
+            <a href="https://news.zerkalo.io/life/47730.html" class="track-link" target="_blank">Zerkalo.io — Coverage of the Guardians project →</a><br>
+            <a href="https://ru.hrodna.life/articles/hraniteli-grodno/" class="track-link" target="_blank">Hrodna.life — Guardians in the Hrodna region →</a><br>
+            <a href="https://mostmedia.io/2023/11/16/podgotovit-telegram-k-proverke/" class="track-link" target="_blank">MOST Media — How to prepare Telegram for a device inspection →</a>
+        </div></div>
+        <div class="track-item"><div class="track-marker"></div><div>
+            <h4>Court and detention monitoring — Grodno region</h4>
+            <p>A human rights monitoring system that tracks and documents political trials and detentions across the Grodno region of Belarus. Aggregates court data, informs the public about ongoing repression, and provides safety consultations — redirecting complex cases to LegalHub and BySol. The data feeds into established human rights organizations including Viasna and DissidentBy. Cited over 660 times by media outlets including Zerkalo, Nasha Niva, Hrodna.Life, and Nastoyashcheye Vremya.</p>
+        </div></div>
+        <div class="track-item"><div class="track-marker"></div><div>
+            <h4>@FindMessagesBot — Find and delete your messages across all Telegram chats</h4>
+            <p>A Telegram bot that lets users search for all their messages across all public chats — something Telegram itself doesn't provide. Critical because authorities prosecute people for comments made years ago. Used by tens of thousands of people. In collaboration with the Cyber Partisans, the bot was integrated into P-Telegram — their security-focused Telegram client — enabling one-click bulk deletion of old messages across all chats.</p>
+            <a href="https://news.zerkalo.io/life/44455.html" class="track-link" target="_blank">Zerkalo.io — A Telegram bot to help delete old messages →</a><br>
+            <a href="https://ru.belsat.eu/80857966/pravozashhitniki-zapustili-bot-dlya-poiska-staryh-soobshhenij-i-kommentariev-v-chatah-telegram" class="track-link" target="_blank">Belsat — Human rights defenders launch the bot →</a>
+        </div></div>
+        <div class="field-tested-box">
+            <h4>✓ Field-tested under real conditions</h4>
+            <p>The platform has been used by activists inside Belarus. In at least one confirmed case, a user's computer was seized by authorities. The user had been instructed to always work through in6.to with VPN and incognito mode. Nothing was found, no charges followed.</p>
+        </div>
+    </div>
+</section>
+<section class="threat-section" id="roadmap">
+    <div class="container">
+        <div class="section-label">Roadmap</div>
+        <h2 class="section-title">Development plan</h2>
+        <p class="section-text">in6.to is at the MVP stage with core functionality working. The roadmap below outlines concrete deliverables for further development.</p>
+        <div class="roadmap-items">
+            <div class="roadmap-item"><div class="roadmap-status next">Next</div><div><h4>Wimmelbook visual login</h4><p>Replace numeric PIN with picture-based authentication — selecting 6 objects from 300+ items yields over a quadrillion combinations while being easy to remember. Deliverable: working authentication module.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status next">Next</div><div><h4>Upgrade cryptographic primitives</h4><p>Migrate from SHA-based key derivation to Argon2id. Deliverable: updated crypto module, documentation of implementation.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status planned">Planned</div><div><h4>Third-party security audit</h4><p>Professional audit of the platform's architecture, cryptographic implementation, and operational security — potentially through programs like OTF's Red Team Lab or equivalent independent reviewers. Deliverable: published audit report.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status planned">Planned</div><div><h4>Anonymous channel reading — no Telegram account needed</h4><p>Allow anyone to safely read Telegram channels and leave anonymous comments without a Telegram account. Creates a large user base providing cover traffic. Deliverable: working module with anonymous commenting via platform bots.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status planned">Planned</div><div><h4>Open-source release</h4><p>Publish the platform's source code for community review, trust, and adoption by other organizations. Deliverable: public repository with documentation.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status planned">Planned</div><div><h4>VPN-free access with traffic obfuscation</h4><p>Mask platform traffic using techniques such as encapsulated tunnels or cloud gateway endpoints (e.g. AWS/Azure), making access indistinguishable from ordinary visits to major websites. This removes the VPN requirement — the biggest barrier to adoption in environments where VPNs are blocked or restricted. Deliverable: working traffic obfuscation prototype with documentation.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status vision">Vision</div><div><h4>Self-hosted deployments for NGOs</h4><p>Package the platform as a Docker image so any human rights organization can deploy their own isolated instance on their own infrastructure, with their own user base — eliminating dependence on any single server or operator.</p></div></div>
+            <div class="roadmap-item"><div class="roadmap-status vision">Vision</div><div><h4>Self-expanding trust network</h4><p>Anonymous social layer where users invite trusted contacts, building verifiable chains of trust without exposing identity.</p></div></div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; margin-top: 3rem; font-family: 'JetBrains Mono', monospace;">Sustainability</h3>
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 2.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.75rem;">The platform is designed for minimal operational cost — it requires only a VPS and a Cloudflare account to run. Once the source code is published, any organization can deploy and maintain their own instance independently. The modular architecture means new features can be contributed by the community.</p>
+        </div>
+
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 1.25rem; font-family: 'JetBrains Mono', monospace;">Target use cases</h3>
+        <div class="vision-cases">
+            <div class="vision-case"><div class="vision-case-icon">📰</div><h4>Ordinary citizen</h4><p class="vision-scenario">Opens the platform, reads independent news, browses subscriptions, leaves comments on opposition channels. Closes the tab.</p><div class="vision-zero-trace">→ Zero traces. No prosecution for "extremist" content. Indistinguishable from millions of other people.</div></div>
+            <div class="vision-case"><div class="vision-case-icon">🎥</div><h4>Journalist / stringer</h4><p class="vision-scenario">Captures photo or video evidence directly through the browser. Media is encrypted and streamed to the server — never touching the device's file system.</p><div class="vision-zero-trace">→ Zero traces. If the device is seized, the gallery is empty. Evidence is safe on an encrypted server in a protected jurisdiction.</div></div>
+            <div class="vision-case"><div class="vision-case-icon">⚖️</div><h4>Human rights defender</h4><p class="vision-scenario">Launches a remote desktop session, works with sensitive databases, coordinates cases. All work happens on a remote server.</p><div class="vision-zero-trace">→ Zero traces. The local device is just a screen. On seizure, authorities find empty hardware. Work resumes from any device.</div></div>
+        </div>
+    </div>
+</section>
+
+<section id="faq">
+    <div class="container">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Common questions</h2>
+        <div class="faq-item"><div class="faq-question">Why not just use an encrypted messenger?</div><div class="faq-answer"><p>E2EE messengers protect data in transit but not against device seizure — all chats, contacts, and history are visible once the phone is unlocked. The app icon itself raises suspicion. in6.to ensures there is nothing on the device to find. The two approaches are complementary — you can use encrypted messengers <em>inside</em> the platform.</p></div></div>
+        <div class="faq-item"><div class="faq-question">Can I use this at a border crossing?</div><div class="faq-answer"><p>This is a key scenario. You keep ordinary apps on your phone while sensitive accounts exist only inside the platform. At a border crossing, your device looks completely normal — no suspicious apps, no browsing history, nothing to prompt additional questions.</p></div></div>
+        <div class="faq-item"><div class="faq-question">Is this a complete guarantee of safety?</div><div class="faq-answer"><p><strong>No.</strong> The platform cannot defend against OS-level exploits, hardware keyloggers, or compromised firmware. What it provides is a high minimum floor of protection for non-technical users: enforced VPN and incognito mode, automatic session destruction, zero traces in the browser, and defense against common physical inspection scenarios. See the <a href="#security" style="color: var(--accent);">Known Limitations</a> section for a detailed breakdown.</p></div></div>
+        <div class="faq-item"><div class="faq-question">What happens if someone forces me to show my browser?</div><div class="faq-answer"><p>Incognito mode means there is nothing to show. Sessions terminate after 60 seconds of inactivity, on tab blur, and on sudden movement. The browser redirects to google.com — no back-button trail. If forced to open the platform, any code/pattern combination opens a new empty account.</p></div></div>
+        <div class="faq-item"><div class="faq-question">Why require VPN and incognito?</div><div class="faq-answer"><p>VPN prevents the ISP from seeing that you accessed the platform. Incognito ensures no cache, cookies, or history after the tab is closed. By enforcing both as hard requirements, we guarantee a baseline for every user. A future version will use traffic masking to eliminate the VPN requirement entirely.</p></div></div>
+        <div class="faq-item"><div class="faq-question">When will the code be open-sourced?</div><div class="faq-answer"><p>Open-source release is a planned deliverable. We are preparing a stable, well-documented release that the community can meaningfully review and build upon. We are committed to full transparency and want the published code to meet a quality standard worthy of community trust.</p></div></div>
+    </div>
+</section>
+
+<section class="contact-section" id="contact">
+    <div class="container">
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's talk</h2>
+        <p class="section-text">Interested in the project, collaboration, funding, or a live demo? Reach out through secure channels.</p>
+        <div class="contact-methods">
+            <a href="mailto:contact@in6.to" class="contact-item">✉️ contact@in6.to</a>
+            <a href="mailto:in6to@proton.me" class="contact-item">🔒 in6to@proton.me</a>
+        </div>
+    </div>
+</section>
+
+<footer><p>in6.to · Built for people who need it most</p></footer>
+
+<script>
+document.querySelectorAll('.country-flip-card').forEach(function(card) {
+    card.addEventListener('click', function() { this.classList.toggle('flipped'); });
+});
+document.querySelectorAll('.demo-video-wrap video').forEach(video => {
+    video.addEventListener('loadeddata', () => { video.setAttribute('data-loaded', 'true'); video.nextElementSibling.style.display = 'none'; });
+    video.addEventListener('error', () => { video.style.display = 'none'; });
+});
+</script>
+</body>
+</html>
